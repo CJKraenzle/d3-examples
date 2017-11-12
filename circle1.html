@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    
+    <title>Circle</title>
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <style>
+      body { 
+        font-family: Raleway; 
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Circles</h2>
+    <p>Reference: Mike Bostock's article <a href="https://bost.ocks.org/mike/circles/">"Three Little Circles"</a></p>
+    <svg></svg>
+
+    <script>
+      var counter = 1;
+      var width = document.documentElement.clientWidth;
+      console.log(width);
+
+      // Data values, [cx, cy, r]
+      var data = [[75, 75, 5],[225, 75, 5], [75, 225, 5], [225, 225, 5]];
+
+      // Generate the SVG element and size
+      var svg = d3.select("svg")
+        .attr("width", 600)
+        .attr("height", 600);
+
+      // Create the initial points
+      var circle =  svg.selectAll("circle")
+          .data(data)
+            .enter().append("circle")
+              .attr("cx", function(d, i) { return d[0]; })
+              .attr("cy", function(d, i) { return d[1]; })
+              .attr("r", function(d) { return d[2]; })
+              .style("fill", "red");
+
+      // Anytime the screen is resized update 
+      window.onresize = function() {
+        renderCircle(data);
+      };
+
+      function renderCircle(data) {
+        if (width > document.documentElement.clientWidth) {
+          counter--;
+        } else if (width < document.documentElement.clientWidth) {
+          counter++;
+        }
+        width =  document.documentElement.clientWidth;
+        if (counter < 1) counter = 1;
+
+        circle.merge(circle)
+          .attr("cx", function(d, i) { return d[0]; })
+          .attr("cy", function(d, i) { return d[1]; })
+          .attr("r", function(d) { return (d[2] * counter); })
+          .style("fill", "blue");
+
+        circle.exit().remove();
+      }
+    </script>
+  </body>
+</html>
